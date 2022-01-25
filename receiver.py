@@ -8,17 +8,12 @@ def receiver_fun(connection):
         buf = connection.recv(265)
 
         if buf:
-
-            starttime = time.time()
             #unpack the file information
             file_path_name, file_size, receive_type = struct.unpack('256sq?', buf)
             file_path_name = file_path_name.decode().strip('\00')
 
             #call switch_path() method to help support Win and Linux better
             file_path_name = switch_path(file_path_name)
-            print()
-            print("I am going to receive ", file_path_name)
-
             (hierarchy,file_basename) = os.path.split(file_path_name)
 
             #if the receive_type is A, then the exsisting file in share folder will be deleted and retransmitted
@@ -52,18 +47,18 @@ def receiver_fun(connection):
                 w_file = open(file_new_name, 'ab')
 
                 #to show the progress of the current transmitting
-                # temp = 0
+                #temp = 0
 
                 while not received_size == file_size:
                     r_data = connection.recv(131072)
                     received_size += len(r_data)
                     w_file.write(r_data)
-                    # progress = round(received_size/file_size,2)
-                    # if(not progress == temp):
-                    #     print(str(progress) +" completed")
-                    #     temp = progress
+                    #progress = round(received_size/file_size,2)
+                    #if(not progress == temp):
+                    #    print(str(progress) +" completed")
+                    #    temp = progress
                 w_file.close()
-                endtime = time.time()
+                #endtime = time.time()
 
                 #if the transmitting finished, then move the file
                 try:
@@ -71,16 +66,10 @@ def receiver_fun(connection):
                 except:
                     os.remove(file_path_name)
                     shutil.move(file_new_name,hierarchy)
-
-                #to show the transmitting speed
-                time_consume = round(endtime - starttime,2)
-                print("time consuming ", time_consume)
-                try:
-                    benchmark = round(file_size/time_consume/1024/1024,2)
-                except:
-                    benchmark = 9999
-                    print("The file is really small")
-                print((str)(benchmark) + " MBps")
+                #to shot the transmitting speed
+                #time_consume = endtime - starttime
+                #benchmark = round(file_size/time_consume/1024/1024,2)
+                #print((str)(benchmark) + " MBps")
 
                 #get the mtime
                 update_time = os.path.getmtime(file_path_name)
@@ -89,7 +78,7 @@ def receiver_fun(connection):
 
                 #help scanner remember this file, so that the scanner will not take this file as a change which should be sen
                 config.old_file_dict[file_path_name]= file_mtime_size
-            print(file_path_name + " is finishted!")
+                print(file_path_name + " is finishted!")
 
             connection.close()
 

@@ -26,9 +26,6 @@ if __name__ == "__main__":
             sock.connect((peer_ip_address, config.port0))
             #Once the connection is built, the 'config.peer_online' will be marked as True, which means the host gets his peer right now
             config.peer_online = True
-
-            print("I have connected my peer! He is " , peer_ip_address)
-
             #'config.old_file_dict' is cleared, which means the memory of scanner is cleared, each file in share will be marked as a change
             config.old_file_dict = {}
 

@@ -12,7 +12,6 @@ def listener_fun(peer_ip_address):
     while True:
         connection,addr = sock0.accept()
         config.peer_online = True
-        print("My peer connects me! He is" , peer_ip_address)
         config.old_file_dict = {}
         #sock0.close()
 

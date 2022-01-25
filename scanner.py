@@ -48,15 +48,16 @@ def scanner_fun(peer_ip_address):
                 #if the file_name has been recorded in the dict, then the difference is called by content update, sent type A is called
                 if(config.old_file_dict.__contains__(item[0])):
 
-                    print("TYPE A")
+                    print("Send Type A")
                     itemlist = list(item[1])
                     itemlist[2] = True
 
                     item = (item[0], tuple(itemlist))
 
 
+                else:
+                    print("Send Type B")
 
-                print("I will send ", item[0])
                 #time.sleep(3)
                 sender.call_sender(peer_ip_address, item)
 
