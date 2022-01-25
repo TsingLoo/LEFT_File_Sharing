@@ -16,6 +16,7 @@ def receiver_fun(connection):
             file_path_name = switch_path(file_path_name)
             (hierarchy,file_basename) = os.path.split(file_path_name)
 
+            starttime = time.time()
             #if the receive_type is A, then the exsisting file in share folder will be deleted and retransmitted
             if (receive_type):
                 os.remove(file_path_name)
@@ -47,18 +48,18 @@ def receiver_fun(connection):
                 w_file = open(file_new_name, 'ab')
 
                 #to show the progress of the current transmitting
-                #temp = 0
+                temp = 0
 
                 while not received_size == file_size:
                     r_data = connection.recv(131072)
                     received_size += len(r_data)
                     w_file.write(r_data)
-                    #progress = round(received_size/file_size,2)
-                    #if(not progress == temp):
-                    #    print(str(progress) +" completed")
-                    #    temp = progress
+                    progress = round(received_size/file_size,2)
+                    if(not progress == temp):
+                        print(str(progress) +" completed")
+                        temp = progress
                 w_file.close()
-                #endtime = time.time()
+                endtime = time.time()
 
                 #if the transmitting finished, then move the file
                 try:
@@ -67,9 +68,9 @@ def receiver_fun(connection):
                     os.remove(file_path_name)
                     shutil.move(file_new_name,hierarchy)
                 #to shot the transmitting speed
-                #time_consume = endtime - starttime
-                #benchmark = round(file_size/time_consume/1024/1024,2)
-                #print((str)(benchmark) + " MBps")
+                time_consume = endtime - starttime
+                benchmark = round(file_size/time_consume/1024/1024,2)
+                print((str)(benchmark) + " MBps")
 
                 #get the mtime
                 update_time = os.path.getmtime(file_path_name)
